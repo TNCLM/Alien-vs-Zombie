@@ -335,7 +335,7 @@ void game(int row, int column, int zombie)
     vector<char> object = {'^', 'v', '<', '>', 'h', 'p', 'r', ' '};
     vector<char> norock = {'^', 'v', '<', '>', 'h', 'p', ' '};
     char random[row][column];
-    int zombdata[zombie][4];
+    int zombdata[zombie][6]; //life attack range zombieinrange(for pod) row column
     srand(time(NULL));
     int o = object.size();
     int nrock = norock.size();
@@ -357,14 +357,16 @@ void game(int row, int column, int zombie)
 
     for (z = 0; z < zombie;)
     {
-        r = rand() % (row - 1);
-        c = rand() % (column - 1);
+        r = rand() % row;
+        c = rand() % column;
         if ((random[r][c] == 'A') || (random[r][c] == 'Z'))
         {
         }
         else
         {
             random[r][c] = 'Z';
+            zombdata[z][4] = r;
+            zombdata[z][5] = c;
             z += 1;
         }
     }
@@ -386,6 +388,7 @@ void game(int row, int column, int zombie)
         }
     }
     al(alife, aattack);
+
     // zombie data
     for (z = 0; z < zombie; z++)
     {
@@ -484,7 +487,7 @@ void game(int row, int column, int zombie)
             if (playerquit == false)
             {
                 bool movedone = false;
-                int ar, ac, zr, zc;
+                int ar, ac;
                 char going;
                 for (int r = 0; r < row; r++)
                 {
@@ -799,6 +802,7 @@ void game(int row, int column, int zombie)
                                 }
                             }
                         }
+
                         for (int ragr = -range; ragr <= range; ragr++)
                         {
                             for (int ragc = -range; ragc <= range; ragc++)
