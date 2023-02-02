@@ -788,20 +788,8 @@ void game(int row, int column, int zombie)
                     {
                         int range = zombdata[z][2];
                         char zombienumber = (z + 49);
-                        for (int r = 0; r < row; r++)
-                        {
-                            for (int c = 0; c < column; c++)
-                            {
-                                if (random[r][c] == zombienumber)
-                                {
-                                    zr = r;
-                                    zc = c;
-                                    r = row;
-                                    c = column;
-                                    break;
-                                }
-                            }
-                        }
+                        zr = zombdata[z][4];
+                        zc = zombdata[z][5];
 
                         for (int ragr = -range; ragr <= range; ragr++)
                         {
