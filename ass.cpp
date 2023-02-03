@@ -218,7 +218,7 @@ void board(int row, int column, int zombie, char *random, int alife, int aattack
         arrowtowhoseturn = "-> ";
     }
     cout << setw(3) << arrowtowhoseturn;
-    cout << "Alien   : Life " << alife << ", Attack " << aattack << endl;
+    cout << "Alien   : Life " << setw(3) << alife << ", Attack " << setw(3) << aattack << endl;
     arrowtowhoseturn = "";
     for (z = 0; z < zombie; z++)
     {
@@ -227,7 +227,7 @@ void board(int row, int column, int zombie, char *random, int alife, int aattack
             arrowtowhoseturn = "-> ";
         }
         cout << setw(3) << arrowtowhoseturn;
-        cout << "Zombie " << z + 1 << ": Life " << *(zombdata + z * 6) << ", Attack " << *(zombdata + z * 6 + 1) << ", Range " << *(zombdata + z * 6 + 2) << endl;
+        cout << "Zombie " << z + 1 << ": Life " << setw(3) << *(zombdata + z * 6) << ", Attack " << setw(3) << *(zombdata + z * 6 + 1) << setw(2) << ", Range " << *(zombdata + z * 6 + 2) << endl;
         arrowtowhoseturn = "";
     }
     cout << endl;
