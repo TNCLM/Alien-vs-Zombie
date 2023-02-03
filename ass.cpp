@@ -106,7 +106,7 @@ void defaultset(int &row, int &column, int &zombie)
     } while (!done);
 }
 
-void board(int row, int column, int zombie, char *random, int alife, int aattack, int *zombdata)
+void board(int row, int column, int zombie, char *random, int alife, int aattack, int *zombdata, int whoseturn)
 {
     int r;
     int c;
@@ -211,12 +211,24 @@ void board(int row, int column, int zombie, char *random, int alife, int aattack
             cout << d << " ";
         }
     }
-    cout << endl
-         << endl
-         << "-> Alien   : Life " << alife << ", Attack " << aattack << endl;
+    cout << endl << endl;
+    string arrowtowhoseturn = "";
+    if (whoseturn == -1)
+    {
+        arrowtowhoseturn = "-> ";
+    }
+    cout << setw(3) << arrowtowhoseturn;
+    cout << "Alien   : Life " << alife << ", Attack " << aattack << endl;
+    arrowtowhoseturn = "";
     for (z = 0; z < zombie; z++)
     {
+        if (whoseturn == z)
+        {
+            arrowtowhoseturn = "-> ";
+        }
+        cout << setw(3) << arrowtowhoseturn;
         cout << "Zombie " << z + 1 << ": Life " << *(zombdata + z * 6) << ", Attack " << *(zombdata + z * 6 + 1) << ", Range " << *(zombdata + z * 6 + 2) << endl;
+        arrowtowhoseturn = "";
     }
     cout << endl;
 }
@@ -326,6 +338,7 @@ void game(int row, int column, int zombie)
     bool zombiedead = false;
     bool playerquit = false;
     char com, ran;
+    int whoseturn;
     int r, c, z;
     int alife = 0;
     int aattack = 0;
@@ -402,7 +415,8 @@ void game(int row, int column, int zombie)
             bool arrowdone = false;
             while (!arrowdone)
             {
-                board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata);
+                whoseturn = -1;
+                board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata, whoseturn);
                 cout << "command> ";
                 cin >> command;
                 if (command == "arrow")
@@ -728,7 +742,7 @@ void game(int row, int column, int zombie)
                         movedone = true;
                         break;
                     }
-                    board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata);
+                    board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata, whoseturn);
                     com = nextcom;
                 }
             }
@@ -741,6 +755,7 @@ void game(int row, int column, int zombie)
             {
                 cout << "Alien's turn ended.\n";
                 aattack = 0;
+                
                 cout << "Press any key to continue ...";
                 char cintocontinue;
                 cin >> cintocontinue;
@@ -761,13 +776,12 @@ void game(int row, int column, int zombie)
                 }
                 if (alientrial > 0)
                 {
-                    board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata);
+                    board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata, whoseturn);
                     cout << alienturn;
                     cout << "Press any key to continue ...";
-
                     cin >> cintocontinue;
                 }
-
+                whoseturn += 1;
                 bool zombieturndone = false;
                 while (!zombieturndone)
                 {
@@ -778,6 +792,12 @@ void game(int row, int column, int zombie)
                     bool alieninrange = true;
                     for (z = 0; z < zombie; z++)
                     {
+                        board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata, whoseturn);
+                        cout << "Zombie " << z+1 << "'s turn."<< endl;
+                        cout << "Press any key to continue ...";
+                        char cintocontinue;
+                        cin >> cintocontinue;
+                        // system("pause")
                         int range = zombdata[z][2];
                         char zombienumber = (z + 49);
                         bool zombiemovedone = false;
@@ -868,10 +888,9 @@ void game(int row, int column, int zombie)
                                 }  
                             }
                         }
-                        board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata);
+                        board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata, whoseturn);
                         cout << "Zombie " << zombienumber << " move " << zombiegoing << endl;
                         cout << "Press any key to continue ...";
-                        char cintocontinue;
                         cin >> cintocontinue;
                         // system("pause")
                         zr = zombdata[z][4];
@@ -885,7 +904,7 @@ void game(int row, int column, int zombie)
                                 {
                                     int zombatt = zombdata[z][1];
                                     alife = alife - zombatt;
-                                    board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata);
+                                    board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata, whoseturn);
                                     cout << "Alien is in the range of Zombie " << z + 1 << endl;
                                     cout << "Alien life reduce by " << zombdata[z][1] << endl;
                                     
@@ -917,13 +936,14 @@ void game(int row, int column, int zombie)
                         }
                         if (alieninrange == false)
                         {
-                            board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata);
+                            board(row, column, zombie, (char *)random, alife, aattack, (int *)zombdata, whoseturn);
                             cout << "Alien is not in range of Zombie " << z + 1 << endl;
                             cout << "Press any key to continue ...";
                             char cintocontinue;
                             cin >> cintocontinue;
                             // system("pause")
                         }
+                        whoseturn += 1;
                     }
                     zombieturndone = true;
                 }
